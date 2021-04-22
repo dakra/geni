@@ -98,6 +98,8 @@
  [zero-one.geni.spark
   create-spark-session
   spark-conf
+  set-settings
+  with-settings
   sql])
 
 (import-vars

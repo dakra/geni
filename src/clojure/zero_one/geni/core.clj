@@ -526,6 +526,7 @@
   read-avro!
   read-binary!
   read-csv!
+  read-delta!
   read-edn!
   read-jdbc!
   read-json!
@@ -536,6 +537,7 @@
   read-xlsx!
   write-avro!
   write-csv!
+  write-delta!
   write-edn!
   write-jdbc!
   write-json!

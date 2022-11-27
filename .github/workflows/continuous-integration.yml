@@ -14,12 +14,12 @@ jobs:
   coverage:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: coverage
         uses: docker://zeroonetechnology/geni:latest
         with:
           entrypoint: scripts/coverage
-      - uses: codecov/codecov-action@v1
+      - uses: codecov/codecov-action@v3
         env:
             CODECOV_TOKEN: bb12d419-f860-48ff-a3bf-8fca4114cc3d
         with:
@@ -28,7 +28,7 @@ jobs:
   lint-ancient:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: lint-ancient
         uses: docker://zeroonetechnology/geni:latest
         with:
@@ -36,7 +36,7 @@ jobs:
   test-geni-cli:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: test-geni-cli
         uses: docker://zeroonetechnology/geni:latest
         with:
@@ -44,7 +44,7 @@ jobs:
   test-templates:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: test-lein-template
         uses: docker://zeroonetechnology/geni:latest
         with:
@@ -53,7 +53,7 @@ jobs:
   test-install-geni-cli:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: test-install-geni-cli
         uses: docker://zeroonetechnology/geni:latest
         with:
@@ -61,25 +61,25 @@ jobs:
   ubuntu-install:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-java@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
         with:
           java-version: 11.0.7
       - uses: DeLaGuardo/setup-clojure@master
         with:
-          lein: 2.9.1
+          lein: 2.9.10
       - run: sudo chown -R $USER:$USER /usr/local/bin
       - name: ubuntu-install
         run: sudo scripts/test-install-geni-cli
   macos-install:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-java@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
         with:
           java-version: 11.0.7
       - uses: DeLaGuardo/setup-clojure@master
         with:
-          lein: 2.9.1
+          lein: 2.9.10
       - name: macos-install
         run: scripts/test-install-geni-cli

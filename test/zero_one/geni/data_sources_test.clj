@@ -33,7 +33,7 @@
       (g/dtypes dummy-df) => {:coord "ArrayType(DoubleType,true)"
                               :prop  "MapType(StringType,StringType,true)"
                               :rooms (str "StructType("
-                                          "StructField(rooms,LongType,true), "
+                                          "StructField(rooms,LongType,true),"
                                           "StructField(bathroom,DoubleType,true))")})
     (fact "correct direct schema option"
       (-> (g/read-parquet!
@@ -49,7 +49,7 @@
           g/dtypes) => {:coord "ArrayType(LongType,true)"
                         :prop  "MapType(StringType,StringType,true)"
                         :rooms (str "StructType("
-                                    "StructField(rooms,IntegerType,true), "
+                                    "StructField(rooms,IntegerType,true),"
                                     "StructField(bathroom,FloatType,true))")})
     (fact "correct data-oriented schema option"
       (-> (g/read-parquet!
@@ -60,7 +60,7 @@
           g/dtypes) => {:coord "ArrayType(ShortType,true)"
                         :prop  "MapType(StringType,StringType,true)"
                         :rooms (str "StructType("
-                                    "StructField(rooms,FloatType,true), "
+                                    "StructField(rooms,FloatType,true),"
                                     "StructField(bathroom,LongType,true))")})))
 
 (facts "On binary data" :binary
@@ -290,20 +290,20 @@
     (set (g/collect write-df)) => (set (g/collect read-df))))
 
 (facts "On read/write of managed tables"
-  (with-state-changes [(before :facts (reset-session!))
-                       (after :facts (delete-warehouse!))]
-    (fact "throws if the table doesn't exist."
-      (g/read-table! @spark "i_dont_exist") => (throws AnalysisException))
+       (with-state-changes [(before :facts (reset-session!))
+                            (after :facts (delete-warehouse!))]
+         (fact "throws if the table doesn't exist."
+               (g/read-table! @spark "i_dont_exist") => (throws AnalysisException))
 
-    (fact "can read and write tables"
-      (let [dataset (g/range 3)
-            table-name "tbl"]
-        (g/write-table! dataset table-name)
-        (c/table-exists? (c/catalog @spark) "tbl") => true
-        (g/collect (g/order-by (g/read-table! table-name) :id)) => (g/collect (g/order-by (g/to-df dataset) :id))))))
+         (fact "can read and write tables"
+               (let [dataset (g/range 3)
+                     table-name "tbl"]
+                 (g/write-table! dataset table-name)
+                 (c/table-exists? (c/catalog @spark) "tbl") => true
+                 (g/collect (g/order-by (g/read-table! table-name) :id)) => (g/collect (g/order-by (g/to-df dataset) :id))))))
 
-(fact "Can read and write Delta tables"
-  (let [temp-dir (.toString (join-paths (.toString (create-temp-dir!)) "delta_test"))
-        read-df (do (g/write-delta! write-df temp-dir {:mode "overwrite"})
-                    (g/read-delta! temp-dir))]
-      (g/collect write-df) => (g/collect read-df)))
+;; (fact "Can read and write Delta tables" :slow
+;;   (let [temp-dir (.toString (join-paths (.toString (create-temp-dir!)) "delta_test"))
+;;         read-df (do (g/write-delta! write-df temp-dir {:mode "overwrite"})
+;;                     (g/read-delta! temp-dir))]
+;;       (g/collect write-df) => (g/collect read-df)))
